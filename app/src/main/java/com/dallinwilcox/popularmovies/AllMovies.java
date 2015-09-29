@@ -1,9 +1,21 @@
 package com.dallinwilcox.popularmovies;
 
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
 
 public class AllMovies extends AppCompatActivity {
 
@@ -11,6 +23,7 @@ public class AllMovies extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_movies);
+        fireRequest();
     }
 
     @Override
@@ -33,5 +46,38 @@ public class AllMovies extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void fireRequest(){
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        //reference http://stackoverflow.com/questions/19167954/use-uri-builder-in-android-or-create-url-with-variables
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http")
+                .authority("api.themoviedb.org")
+                .appendPath("3")
+                .appendPath("discover")
+                .appendPath("movie")
+                .appendQueryParameter("sorty_by", "popularity.desc")
+                .appendQueryParameter("api_key", getString(R.string.tmdb_api_key));
+//        http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=[YOUR API KEY]
+        String url = builder.build().toString();
+        Log.d("request", url);
+        // Request a string response from the provided URL
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("response", "Response is: " + response.toString() );
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("response","ErrorResponse");
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(request);
     }
 }
