@@ -12,7 +12,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
@@ -60,13 +59,13 @@ public class AllMovies extends AppCompatActivity {
                 .appendPath("discover")
                 .appendPath("movie")
                 .appendQueryParameter("sorty_by", "popularity.desc")
-                .appendQueryParameter("api_key", getString(R.string.tmdb_api_key));
-//        http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=[YOUR API KEY]
-        String url = builder.build().toString();
-        Log.d("request", url);
-        // Request a string response from the provided URL
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
+                    .appendQueryParameter("api_key", getString(R.string.tmdb_api_key));
+                    //        http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=[YOUR API KEY]
+                    String url = builder.build().toString();
+                    Log.d("request", url);
+                    // Request a string response from the provided URL
+                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                            new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("response", "Response is: " + response.toString() );
