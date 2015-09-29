@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -13,17 +14,19 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class AllMovies extends AppCompatActivity {
-
+    ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_movies);
         fireRequest();
+        imageView = (ImageView) findViewById(R.id.test_image_view);
     }
 
     @Override
@@ -59,7 +62,7 @@ public class AllMovies extends AppCompatActivity {
                 .appendPath("discover")
                 .appendPath("movie")
                 .appendQueryParameter("sorty_by", "popularity.desc")
-                    .appendQueryParameter("api_key", getString(R.string.tmdb_api_key));
+                .appendQueryParameter("api_key", getString(R.string.tmdb_api_key));
                     //        http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=[YOUR API KEY]
                     String url = builder.build().toString();
                     Log.d("request", url);
@@ -83,11 +86,25 @@ public class AllMovies extends AppCompatActivity {
     }
 
     private void parseResponse(JSONObject response) {
+        String posterPath = "";
         try {
-            Log.v("poster_path", response.getJSONArray("results").getJSONObject(0).getString("poster_path"));
-
+            posterPath = response.getJSONArray("results").getJSONObject(0).getString("poster_path");
         } catch (JSONException e) {
             Log.e("JSONException", "exception", e);
         }
+        Log.v("poster_path", posterPath);
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http")
+                .authority("image.tmdb.org")
+                .appendPath("t")
+                .appendPath("p")
+                .appendPath("w185")
+                .appendEncodedPath("/")
+                .appendEncodedPath(posterPath);
+        //        http://image.tmdb.org/t/p/w185//[poster_path]
+        String url = builder.build().toString();
+        Log.v("posterUrl", url);
+        Glide.with(this).load(url).into(imageView);
+
     }
 }
