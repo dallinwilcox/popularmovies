@@ -15,6 +15,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class AllMovies extends AppCompatActivity {
@@ -70,6 +71,7 @@ public class AllMovies extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Log.d("response", "Response is: " + response.toString() );
 
+                       parseResponse(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -79,5 +81,14 @@ public class AllMovies extends AppCompatActivity {
         });
         // Add the request to the RequestQueue.
         queue.add(request);
+    }
+
+    private void parseResponse(JSONObject response) {
+        try {
+            Log.v("poster_path", response.getJSONArray("results").getJSONObject(0).getString("poster_path"));
+
+        } catch (JSONException e) {
+            Log.e("JSONException", "exception", e);
+        }
     }
 }
