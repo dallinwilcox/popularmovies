@@ -22,7 +22,7 @@ import org.json.JSONObject;
 
 public class AllMovies extends AppCompatActivity {
     ImageView imageView;
-//    VerticalGridView
+    VerticalGridView movieGrid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
