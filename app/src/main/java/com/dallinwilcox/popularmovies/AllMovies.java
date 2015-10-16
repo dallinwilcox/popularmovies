@@ -3,6 +3,8 @@ package com.dallinwilcox.popularmovies;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,20 +17,26 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import android.support.v17.leanback.widget.VerticalGridView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class AllMovies extends AppCompatActivity {
     ImageView imageView;
-    VerticalGridView movieGrid;
+    private RecyclerView movieGrid;
+    private RecyclerView.Adapter movieGridAdapter;
+    private RecyclerView.LayoutManager movieGridLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_movies);
+        movieGrid = (RecyclerView) findViewById(R.id.movieGrid);
+        movieGridLayoutManager = new GridLayoutManager(this, 2); //2 columns (spans)
+        movieGrid.setLayoutManager(movieGridLayoutManager);
+
         fireRequest();
-        imageView = (ImageView) findViewById(R.id.test_image_view);
+        //imageView = (ImageView) findViewById(R.id.test_image_view);
     }
 
     @Override
@@ -94,19 +102,5 @@ public class AllMovies extends AppCompatActivity {
         } catch (JSONException e) {
             Log.e("JSONException", "exception", e);
         }
-        Log.v("poster_path", posterPath);
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("http")
-                .authority("image.tmdb.org")
-                .appendPath("t")
-                .appendPath("p")
-                .appendPath("w185")
-                .appendEncodedPath("/")
-                .appendEncodedPath(posterPath);
-        //        http://image.tmdb.org/t/p/w185//[poster_path]
-        String url = builder.build().toString();
-        Log.v("posterUrl", url);
-        Glide.with(this).load(url).into(imageView);
-
     }
 }
