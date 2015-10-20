@@ -23,7 +23,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by dcwilcox on 10/9/2015.
@@ -46,8 +45,21 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
 
     @Override
     public void onBindViewHolder(MovieGridViewHolder holder, int position) {
-        String posterURL = adapterMovieList.get(position).getQualifiedPosterUrl();
-        Glide.with(holder.posterImageView.getContext()).load(posterURL).into(holder.posterImageView);
+        Context context = holder.posterImageView.getContext();
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http")
+                .authority("image.tmdb.org")
+                .appendPath("t")
+                .appendPath("p")
+                //.appendPath("w185")
+                .appendPath("w" + context.getResources().getDimensionPixelSize(R.dimen.poster_width))
+                .appendEncodedPath(adapterMovieList.get(position).getPosterPath());
+        // url looks like http://image.tmdb.org/t/p/w185//[poster_path]
+
+        String posterURL = builder.build().toString();
+        Glide.with(context)
+                .load(posterURL)
+                .into(holder.posterImageView);
     }
 
 

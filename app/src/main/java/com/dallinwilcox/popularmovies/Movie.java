@@ -1,6 +1,5 @@
 package com.dallinwilcox.popularmovies;
 
-import android.net.Uri; //using for convenience with Uri.builder
 import java.net.URI; //GSON speaks java.net URI so using that for parsing
 import java.util.Date;
 
@@ -23,17 +22,8 @@ public class Movie {
     float vote_average;
     float vote_count;
 
-    public String getQualifiedPosterUrl()
+    public String getPosterPath()
     {
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("http")
-                .authority("image.tmdb.org")
-                .appendPath("t")
-                .appendPath("p")
-                .appendPath("w185")
-                .appendEncodedPath("/")
-                .appendEncodedPath(poster_path.toString());
-        //        http://image.tmdb.org/t/p/w185//[poster_path]
-        return builder.build().toString();
+        return poster_path.toString();
     }
 }
