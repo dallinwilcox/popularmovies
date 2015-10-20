@@ -35,7 +35,8 @@ public class AllMovies extends AppCompatActivity {
         movieGridLayoutManager = new GridLayoutManager(this, 2); //2 columns (spans)
         movieGrid.setLayoutManager(movieGridLayoutManager);
 
-        fireRequest();
+        movieGridAdapter = new MovieGridAdapter(getApplicationContext());
+        movieGrid.setAdapter(movieGridAdapter);
         //imageView = (ImageView) findViewById(R.id.test_image_view);
     }
 
@@ -61,46 +62,5 @@ public class AllMovies extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void fireRequest(){
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        //reference http://stackoverflow.com/questions/19167954/use-uri-builder-in-android-or-create-url-with-variables
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("http")
-                .authority("api.themoviedb.org")
-                .appendPath("3")
-                .appendPath("discover")
-                .appendPath("movie")
-                .appendQueryParameter("sorty_by", "popularity.desc")
-                .appendQueryParameter("api_key", getString(R.string.tmdb_api_key));
-                    //        http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=[YOUR API KEY]
-                    String url = builder.build().toString();
-                    Log.d("request", url);
-                    // Request a string response from the provided URL
-                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                            new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("response", "Response is: " + response.toString() );
 
-                       parseResponse(response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("response","ErrorResponse");
-            }
-        });
-        // Add the request to the RequestQueue.
-        queue.add(request);
-    }
-
-    private void parseResponse(JSONObject response) {
-        String posterPath = "";
-        try {
-            posterPath = response.getJSONArray("results").getJSONObject(0).getString("poster_path");
-        } catch (JSONException e) {
-            Log.e("JSONException", "exception", e);
-        }
-    }
 }

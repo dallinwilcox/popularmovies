@@ -3,7 +3,6 @@ package com.dallinwilcox.popularmovies;
 import android.net.Uri; //using for convenience with Uri.builder
 import java.net.URI; //GSON speaks java.net URI so using that for parsing
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by dcwilcox on 10/13/2015.
@@ -12,7 +11,7 @@ public class Movie {
     boolean adult;
     URI backdrop_path;
     int[] genre_ids;
-    int id;  //if ids ever exceed max int, may need to switch to a long
+    int id;  //if id ever exceeds max int, may need to switch to a long
     String original_language;
     String original_title;
     String overview;
