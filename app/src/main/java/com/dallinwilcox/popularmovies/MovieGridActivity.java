@@ -21,7 +21,7 @@ import com.bumptech.glide.Glide;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AllMovies extends AppCompatActivity {
+public class MovieGridActivity extends AppCompatActivity {
     ImageView imageView;
     private RecyclerView movieGrid;
     private RecyclerView.Adapter movieGridAdapter;

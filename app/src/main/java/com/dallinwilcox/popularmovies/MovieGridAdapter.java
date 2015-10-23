@@ -1,6 +1,7 @@
 package com.dallinwilcox.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -51,15 +52,22 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
                 .authority("image.tmdb.org")
                 .appendPath("t")
                 .appendPath("p")
-                //.appendPath("w185")
-                .appendPath("w" + context.getResources().getDimensionPixelSize(R.dimen.poster_width))
+                .appendPath("w185")
+                //.appendPath("w" + context.getResources().getDimensionPixelSize(R.dimen.poster_width))
                 .appendEncodedPath(adapterMovieList.get(position).getPosterPath());
         // url looks like http://image.tmdb.org/t/p/w185//[poster_path]
 
         String posterURL = builder.build().toString();
         Glide.with(context)
                 .load(posterURL)
+                .centerCrop()
                 .into(holder.posterImageView);
+        holder.posterImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), MovieDetailsActivity.class);
+            }
+        });
     }
 
 
@@ -93,7 +101,10 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
         adapterMovieList = new ArrayList<Movie>();
         queue = Volley.newRequestQueue(context);
         apiKey = context.getString(R.string.tmdb_api_key);
-        fireRequest(1);//initial call for first page
+        if (adapterMovieList.size() == 0)
+        {
+            fireRequest(1);//initial call for first page
+        }
     }
     private void fireRequest(int page){
 
@@ -136,6 +147,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
         Type movieListType = new TypeToken<MovieResponse>(){}.getType();
         MovieResponse movieResponse = gson.fromJson(response, movieListType);
         adapterMovieList.addAll(movieResponse.getResults());
-        notifyItemRangeChanged(movieResponse.getPage(), movieResponse.getResultSize());
+        //// TODO: 10/22/2015 fix position
+        notifyItemRangeInserted(movieResponse.getPage(), movieResponse.getResultSize());
     }
 }
