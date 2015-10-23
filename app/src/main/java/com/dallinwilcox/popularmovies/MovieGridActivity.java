@@ -37,7 +37,6 @@ public class MovieGridActivity extends AppCompatActivity {
 
         movieGridAdapter = new MovieGridAdapter(getApplicationContext());
         movieGrid.setAdapter(movieGridAdapter);
-        //imageView = (ImageView) findViewById(R.id.test_image_view);
     }
 
     @Override
@@ -61,6 +60,4 @@ public class MovieGridActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
 }

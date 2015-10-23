@@ -66,6 +66,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
             @Override
             public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), MovieDetailsActivity.class);
+
             }
         });
     }
@@ -76,12 +77,24 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
         return adapterMovieList.size();
     }
 
-    public class MovieGridViewHolder extends RecyclerView.ViewHolder {
+    public class MovieGridViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView posterImageView;
 
         public MovieGridViewHolder(View itemView) {
             super(itemView);
             posterImageView = (ImageView) itemView.findViewById(R.id.poster_image_view);
+            posterImageView.setClickable(true);
+            posterImageView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (itemClick != null) {
+                itemClick.onItemClicked(getAdapterPosition());
+                //http://stackoverflow.com/questions/32323548/passing-data-from-on-click-function-of-my-recycler-adaptor
+                //http://stackoverflow.com/a/27886776
+            }
+        }
         }
     }
 
