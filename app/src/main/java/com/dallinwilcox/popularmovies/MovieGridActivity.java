@@ -1,30 +1,16 @@
 package com.dallinwilcox.popularmovies;
 
-import android.net.Uri;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class MovieGridActivity extends AppCompatActivity {
-    ImageView imageView;
+public class MovieGridActivity extends AppCompatActivity implements OnItemClick {
     private RecyclerView movieGrid;
-    private RecyclerView.Adapter movieGridAdapter;
+    private MovieGridAdapter movieGridAdapter;
     private RecyclerView.LayoutManager movieGridLayoutManager;
 
     @Override
@@ -37,6 +23,7 @@ public class MovieGridActivity extends AppCompatActivity {
 
         movieGridAdapter = new MovieGridAdapter(getApplicationContext());
         movieGrid.setAdapter(movieGridAdapter);
+        movieGridAdapter.setItemClick(this);
     }
 
     @Override
@@ -59,5 +46,12 @@ public class MovieGridActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        Intent intent = new Intent(this ,MovieDetailsActivity.class);
+        intent.putExtra(MovieDetailsActivity.MOVIE_EXTRA, movieGridAdapter.get(position));
+        startActivity(intent);
     }
 }

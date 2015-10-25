@@ -1,7 +1,6 @@
 package com.dallinwilcox.popularmovies;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -36,6 +35,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
     // Instantiate the RequestQueue.
     private RequestQueue queue;
     private String apiKey;
+    private OnItemClick itemClick;
 
     @Override
     public MovieGridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -47,28 +47,10 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
     @Override
     public void onBindViewHolder(MovieGridViewHolder holder, int position) {
         Context context = holder.posterImageView.getContext();
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("http")
-                .authority("image.tmdb.org")
-                .appendPath("t")
-                .appendPath("p")
-                .appendPath("w185")
-                //.appendPath("w" + context.getResources().getDimensionPixelSize(R.dimen.poster_width))
-                .appendEncodedPath(adapterMovieList.get(position).getPosterPath());
-        // url looks like http://image.tmdb.org/t/p/w185//[poster_path]
-
-        String posterURL = builder.build().toString();
         Glide.with(context)
-                .load(posterURL)
+                .load(adapterMovieList.get(position).getPosterUrl())
                 .centerCrop()
                 .into(holder.posterImageView);
-        holder.posterImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), MovieDetailsActivity.class);
-
-            }
-        });
     }
 
 
@@ -82,9 +64,9 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
 
         public MovieGridViewHolder(View itemView) {
             super(itemView);
+            itemView.setClickable(true);
+            itemView.setOnClickListener(this);
             posterImageView = (ImageView) itemView.findViewById(R.id.poster_image_view);
-            posterImageView.setClickable(true);
-            posterImageView.setOnClickListener(this);
         }
 
         @Override
@@ -95,7 +77,14 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
                 //http://stackoverflow.com/a/27886776
             }
         }
-        }
+    }
+
+    public OnItemClick getItemClick() {
+        return itemClick;
+    }
+
+    public void setItemClick(OnItemClick itemClick) {
+        this.itemClick = itemClick;
     }
 
     public void add(int position, Movie movie){
@@ -110,16 +99,21 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
         notifyItemRemoved(position);
     }
 
+    public Movie get(int position)
+    {
+        return adapterMovieList.get(position);
+    }
+
     public MovieGridAdapter(Context context){
         adapterMovieList = new ArrayList<Movie>();
         queue = Volley.newRequestQueue(context);
         apiKey = context.getString(R.string.tmdb_api_key);
         if (adapterMovieList.size() == 0)
         {
-            fireRequest(1);//initial call for first page
+            requestMovies(1);//initial call for first page
         }
     }
-    private void fireRequest(int page){
+    private void requestMovies(int page){
 
         //reference http://stackoverflow.com/questions/19167954/use-uri-builder-in-android-or-create-url-with-variables
         Uri.Builder builder = new Uri.Builder();

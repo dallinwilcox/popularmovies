@@ -1,9 +1,11 @@
 package com.dallinwilcox.popularmovies;
 
+import android.net.Uri;  //Using android.net Uri for url construction
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.net.URI; //GSON speaks java.net URI so using that for parsing
+import java.net.URISyntaxException;
 import java.util.Date;
 
 /**
@@ -27,11 +29,15 @@ public class Movie implements Parcelable{
 
     protected Movie(Parcel in) {
         adult = in.readByte() != 0;
+        backdrop_path = (URI.create(in.readString()));
         genre_ids = in.createIntArray();
         id = in.readInt();
         original_language = in.readString();
         original_title = in.readString();
         overview = in.readString();
+        //referenced http://stackoverflow.com/questions/21017404/reading-and-writing-java-util-date-from-parcelable-class
+        release_date = new Date(in.readLong());
+        poster_path = (URI.create(in.readString()));
         popularity = in.readFloat();
         title = in.readString();
         video = in.readByte() != 0;
@@ -42,11 +48,14 @@ public class Movie implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByte((byte) (adult ? 1 : 0));
+        dest.writeString(backdrop_path.toString());
         dest.writeIntArray(genre_ids);
         dest.writeInt(id);
         dest.writeString(original_language);
         dest.writeString(original_title);
         dest.writeString(overview);
+        dest.writeLong(release_date.getTime());
+        dest.writeString(poster_path.toString());
         dest.writeFloat(popularity);
         dest.writeString(title);
         dest.writeByte((byte) (video ? 1 : 0));
@@ -71,8 +80,50 @@ public class Movie implements Parcelable{
         }
     };
 
-    public String getPosterPath()
+    public String getPosterUrl()
     {
-        return poster_path.toString();
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http")
+                .authority("image.tmdb.org")
+                .appendPath("t")
+                .appendPath("p")
+                .appendPath("w185")
+                //.appendPath("w" + context.getResources().getDimensionPixelSize(R.dimen.poster_width))
+                .appendEncodedPath(poster_path.toString());
+        // url looks like http://image.tmdb.org/t/p/w185//[poster_path]
+
+        return builder.build().toString();
+    }
+
+    public String getOriginal_title() {
+        return original_title;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public Date getRelease_date() {
+        return release_date;
+    }
+
+    public float getPopularity() {
+        return popularity;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public boolean isVideo() {
+        return video;
+    }
+
+    public float getVote_average() {
+        return vote_average;
+    }
+
+    public float getVote_count() {
+        return vote_count;
     }
 }
