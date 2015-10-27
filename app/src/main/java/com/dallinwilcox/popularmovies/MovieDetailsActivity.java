@@ -17,6 +17,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @Bind(R.id.titleText) TextView titleText;
     @Bind(R.id.posterImageView) ImageView posterImage;
     @Bind(R.id.releaseDateText) TextView releaseDate;
+    @Bind(R.id.overviewText) TextView overviewText;
+    @Bind(R.id.voteAverageText) TextView rating;
     //referenced http://jakewharton.github.io/butterknife/
 
     public static final String MOVIE_EXTRA = "MovieExtra";
@@ -34,5 +36,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 .load(movie.getPosterUrl())
                 .centerCrop()
                 .into(posterImage);
+        //sometime when I get more time, investigate generating tint via palette from bitmap
+        //see https://github.com/bumptech/glide/wiki/Custom-targets
+        releaseDate.setText(movie.getFormattedReleaseDate());
+        overviewText.setText(movie.getOverview());
+        rating.setText(String.format(getString(R.string.rating), movie.getVote_average()));
+
     }
 }

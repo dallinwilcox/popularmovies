@@ -50,7 +50,7 @@ public class MovieGridActivity extends AppCompatActivity implements OnItemClick 
 
     @Override
     public void onItemClicked(int position) {
-        Intent intent = new Intent(this ,MovieDetailsActivity.class);
+        Intent intent = new Intent(getApplicationContext() ,MovieDetailsActivity.class);
         intent.putExtra(MovieDetailsActivity.MOVIE_EXTRA, movieGridAdapter.get(position));
         startActivity(intent);
     }

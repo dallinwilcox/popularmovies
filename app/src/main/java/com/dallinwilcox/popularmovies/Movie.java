@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 import java.net.URI; //GSON speaks java.net URI so using that for parsing
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -13,6 +14,7 @@ import java.util.Date;
  */
 public class Movie implements Parcelable{
     boolean adult;
+    //field names match API JSON object field names for Gson parsing so using _ instead of camelcase
     URI backdrop_path;
     int[] genre_ids;
     int id;  //if id ever exceeds max int, may need to switch to a long
@@ -103,8 +105,10 @@ public class Movie implements Parcelable{
         return overview;
     }
 
-    public Date getRelease_date() {
-        return release_date;
+    public String getFormattedReleaseDate() {
+       //reference http://developer.android.com/reference/java/text/SimpleDateFormat.html
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM yyyy");
+       return dateFormatter.format(release_date);
     }
 
     public float getPopularity() {

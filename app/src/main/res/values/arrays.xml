@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sortPreferences">
+        <item name="mostPopular">Most popular</item>
+        <item name="highest-rated">Highest-rated</item>
+    </string-array>
+    <string-array name="sortPreferenceValues">
+        <item name="mostPopular">popular</item>
+        <item name="highest-rated">top_rated</item>
+    </string-array>
+    <string-array name="sortOrder">
+        <item name="ascending">Ascending</item>
+        <item name="descending">Descending</item>
+    </string-array>
+    <string-array name="sortOrderValues">
+        <item name="ascending">asc</item>
+        <item name="descending">desc</item>
+    </string-array>
+</resources>
