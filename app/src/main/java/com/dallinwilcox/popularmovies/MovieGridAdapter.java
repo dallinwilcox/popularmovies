@@ -1,7 +1,9 @@
 package com.dallinwilcox.popularmovies;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,18 +32,19 @@ import java.util.ArrayList;
  * //referenced <a href="http://www.vogella.com/tutorials/AndroidRecyclerView/article.html#recyclerview_overview">
  * http://www.vogella.com/tutorials/AndroidRecyclerView/article.html#recyclerview_overview</a>
  */
-public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.MovieGridViewHolder> {
+public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.MovieGridViewHolder>
+    implements SharedPreferences.OnSharedPreferenceChangeListener {
     private ArrayList<Movie> adapterMovieList;
     // Instantiate the RequestQueue.
     private RequestQueue queue;
-    private String apiKey;
+    private String apiKey = "";
+    private String sortBy = "";
     private OnItemClick itemClick;
 
     @Override
     public MovieGridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View cell = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_cell, parent, false);
-        MovieGridViewHolder movieGridViewHolder = new MovieGridViewHolder(cell);
-        return movieGridViewHolder;
+        return new MovieGridViewHolder(cell);
     }
 
     @Override
@@ -57,6 +60,42 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
     @Override
     public int getItemCount() {
         return adapterMovieList.size();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        //don't really care which one changed, need to regenerate the combination of both
+        //preferences to check for changes to the view
+        String storedSortPreferences = getStoredSortPreferences(sharedPreferences);
+
+        //if new string matches the old one, don't need to do anything
+        if (sortBy.equals(storedSortPreferences))
+        {
+            return;
+        }
+        //Implicit else
+        sortBy = storedSortPreferences;
+
+        adapterMovieList.clear();
+        //don't need to notify since we won't redraw until the new call comes back
+        //not sure if this might be impacted by scrolling during call or not...
+        requestMovies(1);
+    }
+
+    @NonNull
+    private String getStoredSortPreferences(SharedPreferences sharedPreferences) {
+        //considered doing some validation, but since everything is coming from resources,
+        //chances are really low that we'll get bogus values
+
+        String sortString = new StringBuilder(
+            sharedPreferences.getString(SettingsFragment.PREF_SORT_BY_KEY, ""))
+                .append(".")
+                .append(sharedPreferences.getString(SettingsFragment.PREF_SORT_ORDER_KEY, ""))
+                .toString();
+
+        Log.d("MovieGridAdapter", "sortString" + sortString);
+        return sortString;
     }
 
     public class MovieGridViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -108,6 +147,13 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
         adapterMovieList = new ArrayList<Movie>();
         queue = Volley.newRequestQueue(context);
         apiKey = context.getString(R.string.tmdb_api_key);
+        //don't have access to getDefaultSharedPreferences, so recreating instead of adding
+        //an additional parameter since we can get it from context that is already passed in
+        //see http://stackoverflow.com/a/6310080
+        sortBy = getStoredSortPreferences(
+                context.getSharedPreferences(
+                        context.getPackageName() + "_preferences", Context.MODE_PRIVATE));
+
         if (adapterMovieList.size() == 0)
         {
             requestMovies(1);//initial call for first page
@@ -122,7 +168,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
                 .appendPath("3")
                 .appendPath("discover")
                 .appendPath("movie")
-                .appendQueryParameter("sorty_by", "popularity.desc")
+                .appendQueryParameter("sorty_by", sortBy)
                 .appendQueryParameter("api_key", apiKey);
         //        http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=[YOUR API KEY]
         String url = builder.build().toString();
@@ -132,7 +178,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("response", "Response is: " + response);
+                        Log.v("response", "Response is: " + response);
 
                         parseResponse(response);
                     }
@@ -155,6 +201,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
         MovieResponse movieResponse = gson.fromJson(response, movieListType);
         adapterMovieList.addAll(movieResponse.getResults());
         //// TODO: 10/22/2015 fix position
-        notifyItemRangeInserted(movieResponse.getPage(), movieResponse.getResultSize());
+        notifyItemRangeInserted((movieResponse.getPage() - 1), movieResponse.getResultSize());
     }
+
 }

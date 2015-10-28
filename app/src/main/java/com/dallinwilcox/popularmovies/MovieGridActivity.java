@@ -1,6 +1,8 @@
 package com.dallinwilcox.popularmovies;
 
 import android.content.Intent;
+import android.media.audiofx.BassBoost;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,6 +18,8 @@ public class MovieGridActivity extends AppCompatActivity implements OnItemClick 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
         setContentView(R.layout.activity_all_movies);
         movieGrid = (RecyclerView) findViewById(R.id.movieGrid);
         movieGridLayoutManager = new GridLayoutManager(this, 2); //2 columns (spans)
@@ -42,9 +46,10 @@ public class MovieGridActivity extends AppCompatActivity implements OnItemClick 
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent (getApplicationContext(), SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -53,5 +58,17 @@ public class MovieGridActivity extends AppCompatActivity implements OnItemClick 
         Intent intent = new Intent(getApplicationContext() ,MovieDetailsActivity.class);
         intent.putExtra(MovieDetailsActivity.MOVIE_EXTRA, movieGridAdapter.get(position));
         startActivity(intent);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .registerOnSharedPreferenceChangeListener(movieGridAdapter);
+    }
+    @Override
+    protected void onPause() {
+        PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .unregisterOnSharedPreferenceChangeListener(movieGridAdapter);
+        super.onPause();
     }
 }
