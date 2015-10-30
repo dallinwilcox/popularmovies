@@ -41,6 +41,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
     private String sortBy = "";
     private OnItemClick itemClick;
 
+
     @Override
     public MovieGridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View cell = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_cell, parent, false);
@@ -62,6 +63,9 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
         return adapterMovieList.size();
     }
 
+    //not sure why, but this isn't getting called.  Suspected it was due to unregistering in onPause
+    //which would fire when settings is displayed, but changed from onResume/onPause to
+    //onCreate/onStop and it's still happening.
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
@@ -78,8 +82,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
         sortBy = storedSortPreferences;
 
         adapterMovieList.clear();
-        //don't need to notify since we won't redraw until the new call comes back
-        //not sure if this might be impacted by scrolling during call or not...
+        notifyDataSetChanged();
         requestMovies(1);
     }
 
@@ -168,11 +171,14 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
                 .appendPath("3")
                 .appendPath("discover")
                 .appendPath("movie")
+                .appendQueryParameter("vote_count.gte", Integer.toString(50))
+                .appendQueryParameter("page", Integer.toString(page))
                 .appendQueryParameter("sorty_by", sortBy)
+                .appendQueryParameter("year", "2015")
                 .appendQueryParameter("api_key", apiKey);
         //        http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=[YOUR API KEY]
         String url = builder.build().toString();
-        Log.d("request", url);
+        Log.v("request", url);
         // Request a string response from the provided URL
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -199,9 +205,12 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
                 .create();
         Type movieListType = new TypeToken<MovieResponse>(){}.getType();
         MovieResponse movieResponse = gson.fromJson(response, movieListType);
+        //save current size as insertion position for notification before adding new results
+        //works well since size = current last position + 1 which is where the first
+        // new item is inserted and handles zero case
+        int insertionPosition = adapterMovieList.size();
         adapterMovieList.addAll(movieResponse.getResults());
-        //// TODO: 10/22/2015 fix position
-        notifyItemRangeInserted((movieResponse.getPage() - 1), movieResponse.getResultSize());
+        notifyItemRangeInserted((insertionPosition), movieResponse.getResultSize());
     }
 
 }

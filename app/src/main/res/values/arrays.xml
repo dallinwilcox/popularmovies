@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pref_sort_by_entries">
-        <item name="mostPopular">@string/pref_sort_by_default</item>
+        <item name="mostPopular">Most Popular</item>
         <item name="highest-rated">Highest-rated</item>
     </string-array>
     <string-array name="pref_sort_by_values">
-        <item name="mostPopular">popularity</item>
+        <item name="mostPopular">@string/pref_sort_by_default_value</item>
         <item name="highest-rated">vote_average</item>
     </string-array>
     <string-array name="pref_sort_order_entries">
-        <item name="ascending">@string/pref_sort_order_default</item>
+        <item name="ascending">Descending</item>
         <item name="descending">Ascending</item>
     </string-array>
     <string-array name="pref_sort_order_values">
-        <item name="ascending">desc</item>
+        <item name="ascending">@string/pref_sort_order_default_value</item>
         <item name="descending">asc</item>
     </string-array>
 </resources>

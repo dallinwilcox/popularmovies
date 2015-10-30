@@ -6,7 +6,7 @@
         android:entries="@array/pref_sort_by_entries"
         android:entryValues="@array/pref_sort_by_values"
         android:persistent="true"
-        android:defaultValue="@string/pref_sort_by_default"
+        android:defaultValue="@string/pref_sort_by_default_value"
         android:summary="%s"/>
         <!-- Referenced http://stackoverflow.com/a/26116856
         and http://stackoverflow.com/a/4161645/2169923-->
@@ -17,5 +17,5 @@
         android:entryValues="@array/pref_sort_order_values"
         android:persistent="true"
         android:summary="%s"
-        android:defaultValue="@string/pref_sort_order_default"/>
+        android:defaultValue="@string/pref_sort_order_default_value"/>
 </PreferenceScreen>

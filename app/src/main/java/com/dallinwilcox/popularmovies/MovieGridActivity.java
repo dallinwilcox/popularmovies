@@ -18,7 +18,6 @@ public class MovieGridActivity extends AppCompatActivity implements OnItemClick 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         setContentView(R.layout.activity_all_movies);
         movieGrid = (RecyclerView) findViewById(R.id.movieGrid);
@@ -46,8 +45,11 @@ public class MovieGridActivity extends AppCompatActivity implements OnItemClick 
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent (getApplicationContext(), SettingsActivity.class);
-            startActivity(intent);
+            startActivity( new Intent (getApplicationContext(), SettingsActivity.class));
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                    .registerOnSharedPreferenceChangeListener(movieGridAdapter);
+            //registering listener here intentionally, refer to
+            // http://stackoverflow.com/a/8668012/2169923
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -59,16 +61,11 @@ public class MovieGridActivity extends AppCompatActivity implements OnItemClick 
         intent.putExtra(MovieDetailsActivity.MOVIE_EXTRA, movieGridAdapter.get(position));
         startActivity(intent);
     }
+
     @Override
-    protected void onResume() {
-        super.onResume();
-        PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .registerOnSharedPreferenceChangeListener(movieGridAdapter);
-    }
-    @Override
-    protected void onPause() {
+    protected void onDestroy() {
         PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .unregisterOnSharedPreferenceChangeListener(movieGridAdapter);
-        super.onPause();
+        super.onDestroy();
     }
 }
