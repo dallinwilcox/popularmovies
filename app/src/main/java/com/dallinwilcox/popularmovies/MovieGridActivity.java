@@ -1,7 +1,6 @@
 package com.dallinwilcox.popularmovies;
 
 import android.content.Intent;
-import android.media.audiofx.BassBoost;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,7 +18,7 @@ public class MovieGridActivity extends AppCompatActivity implements OnItemClick 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_all_movies);
+        setContentView(R.layout.activity_movie_grid);
         movieGrid = (RecyclerView) findViewById(R.id.movieGrid);
         movieGridLayoutManager = new GridLayoutManager(this, 2); //2 columns (spans)
         movieGrid.setLayoutManager(movieGridLayoutManager);

@@ -32,7 +32,7 @@ import java.util.ArrayList;
  * //referenced <a href="http://www.vogella.com/tutorials/AndroidRecyclerView/article.html#recyclerview_overview">
  * http://www.vogella.com/tutorials/AndroidRecyclerView/article.html#recyclerview_overview</a>
  */
-public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.MovieGridViewHolder>
+public class MovieGridAdapter extends AutofitRecyclerView.Adapter<MovieGridAdapter.MovieGridViewHolder>
     implements SharedPreferences.OnSharedPreferenceChangeListener {
     private ArrayList<Movie> adapterMovieList;
     // Instantiate the RequestQueue.
@@ -81,6 +81,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
         //Implicit else
         sortBy = storedSortPreferences;
 
+        int endPositionOfItemsToRemove = adapterMovieList.size() - 1 ;
         adapterMovieList.clear();
         notifyDataSetChanged();
         requestMovies(1);
@@ -173,8 +174,8 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
                 .appendPath("movie")
                 .appendQueryParameter("vote_count.gte", Integer.toString(50))
                 .appendQueryParameter("page", Integer.toString(page))
-                .appendQueryParameter("sorty_by", sortBy)
                 .appendQueryParameter("year", "2015")
+                .appendQueryParameter("sorty_by", sortBy)
                 .appendQueryParameter("api_key", apiKey);
         //        http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=[YOUR API KEY]
         String url = builder.build().toString();
