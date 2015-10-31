@@ -12,7 +12,6 @@ import android.view.MenuItem;
 public class MovieGridActivity extends AppCompatActivity implements OnItemClick {
     private RecyclerView movieGrid;
     private MovieGridAdapter movieGridAdapter;
-    private RecyclerView.LayoutManager movieGridLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,10 +19,7 @@ public class MovieGridActivity extends AppCompatActivity implements OnItemClick 
 
         setContentView(R.layout.activity_movie_grid);
         movieGrid = (RecyclerView) findViewById(R.id.movieGrid);
-        movieGridLayoutManager = new GridLayoutManager(this, 2); //2 columns (spans)
-        movieGrid.setLayoutManager(movieGridLayoutManager);
-
-        movieGridAdapter = new MovieGridAdapter(getApplicationContext());
+        movieGridAdapter = new MovieGridAdapter(this);
         movieGrid.setAdapter(movieGridAdapter);
         movieGridAdapter.setItemClick(this);
     }
