@@ -16,7 +16,7 @@ and must be properly initialized.  Reference https://git-scm.com/book/en/v2/Git-
 for details, but the following summary is provided for convenience below.
 
 ###Volley library checkout instructions
-Either clone the entire project with the --recursive flag as in
+Either clone the entire project with the --recursive flag as in  
 `git clone https://github.com/dallinwilcox/popularmovies.git --recursive`
 -OR-
 run the following git commands once the parent project has been cloned
