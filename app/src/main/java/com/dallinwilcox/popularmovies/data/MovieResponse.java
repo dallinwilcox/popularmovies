@@ -1,4 +1,4 @@
-package com.dallinwilcox.popularmovies;
+package com.dallinwilcox.popularmovies.data;
 
 import java.util.ArrayList;
 

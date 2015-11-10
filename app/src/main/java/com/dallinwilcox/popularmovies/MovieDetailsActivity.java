@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.dallinwilcox.popularmovies.data.Movie;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -41,6 +42,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
         releaseDate.setText(movie.getFormattedReleaseDate());
         overviewText.setText(movie.getOverview());
         rating.setText(String.format(getString(R.string.rating), movie.getVote_average()));
+    }
+    private void requestVideos()
+    {
 
     }
+
+    private void requestReviews()
+    {
+
+    }
+
 }

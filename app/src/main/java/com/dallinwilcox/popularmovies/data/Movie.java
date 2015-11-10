@@ -1,11 +1,10 @@
-package com.dallinwilcox.popularmovies;
+package com.dallinwilcox.popularmovies.data;
 
 import android.net.Uri;  //Using android.net Uri for url construction
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.net.URI; //GSON speaks java.net URI so using that for parsing
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
