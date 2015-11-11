@@ -1,8 +1,10 @@
-package com.dallinwilcox.popularmovies;
+package com.dallinwilcox.popularmovies.inf;
 
 import android.app.Application;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.dallinwilcox.popularmovies.R;
 
 
 /**

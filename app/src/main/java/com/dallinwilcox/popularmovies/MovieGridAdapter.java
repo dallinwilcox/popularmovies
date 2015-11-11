@@ -20,6 +20,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.dallinwilcox.popularmovies.data.Movie;
 import com.dallinwilcox.popularmovies.data.MovieResponse;
+import com.dallinwilcox.popularmovies.inf.RequestManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -151,7 +152,7 @@ public class MovieGridAdapter extends AutofitRecyclerView.Adapter<MovieGridAdapt
 
     public MovieGridAdapter(Context context){
         adapterMovieList = new ArrayList<Movie>();
-        queue = Volley.newRequestQueue(context);
+        queue = RequestManager.getInstance(context).getRequestQueue();
         apiKey = context.getString(R.string.tmdb_api_key);
         //don't have access to getDefaultSharedPreferences, so recreating instead of adding
         //an additional parameter since we can get it from context that is already passed in
