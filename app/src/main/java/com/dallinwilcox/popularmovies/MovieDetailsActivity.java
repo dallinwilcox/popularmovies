@@ -14,6 +14,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.dallinwilcox.popularmovies.data.Movie;
 
+import com.dallinwilcox.popularmovies.data.ReviewResponse;
 import com.dallinwilcox.popularmovies.data.Video;
 import com.dallinwilcox.popularmovies.data.VideoResponse;
 import com.dallinwilcox.popularmovies.inf.RequestManager;
@@ -30,11 +31,16 @@ import butterknife.ButterKnife;
  * Created by dcwilcox on 10/22/2015.
  */
 public class MovieDetailsActivity extends AppCompatActivity {
-    @Bind(R.id.titleText) TextView titleText;
-    @Bind(R.id.posterImageView) ImageView posterImage;
-    @Bind(R.id.releaseDateText) TextView releaseDate;
-    @Bind(R.id.overviewText) TextView overviewText;
-    @Bind(R.id.voteAverageText) TextView rating;
+    @Bind(R.id.titleText)
+    TextView titleText;
+    @Bind(R.id.posterImageView)
+    ImageView posterImage;
+    @Bind(R.id.releaseDateText)
+    TextView releaseDate;
+    @Bind(R.id.overviewText)
+    TextView overviewText;
+    @Bind(R.id.voteAverageText)
+    TextView rating;
     //referenced http://jakewharton.github.io/butterknife/
 
     public static final String MOVIE_EXTRA = "MovieExtra";
@@ -46,7 +52,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
         ButterKnife.bind(this);
         Movie movie = (Movie) getIntent().getExtras().getParcelable(MOVIE_EXTRA);
-
+        requestVideos(movie.getId());
+        requestReviews(movie.getId());
         titleText.setText(movie.getOriginal_title());
         Glide.with(this)
                 .load(movie.getPosterUrl())
@@ -58,35 +65,28 @@ public class MovieDetailsActivity extends AppCompatActivity {
         overviewText.setText(movie.getOverview());
         rating.setText(String.format(getString(R.string.rating), movie.getVote_average()));
     }
-    private void requestVideos(int id)
-    {
 
+    private void requestVideos(int id) {
+
+        requestAction(id, "videos", new VideoResponseListener());
+    }
+
+    private void requestAction(int id, String action, Response.Listener<String> responseListener) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http")
                 .authority("api.themoviedb.org")
                 .appendPath("3")
                 .appendPath("movie")
                 .appendPath(Integer.toString(id))
-                .appendPath("videos")
+                .appendPath(action)
                 .appendQueryParameter("api_key", getString(R.string.tmdb_api_key));
-            // http://api.themoviedb.org/3/movie/{id}/videos?api_key=[YOUR API KEY]
+        //videos url - http://api.themoviedb.org/3/movie/{id}/videos?api_key=[YOUR API KEY]
+        //review url - http://api.themoviedb.org/3/movie/{id}/reviews?api_key=[YOUR API KEY]
         String url = builder.build().toString();
         Log.v("request", url);
         // Request a string response from the provided URL
         StringRequest request = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.v("response", "Response is: " + response);
-
-                        parseVideoResponse(response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("response","ErrorResponse");
-            }
-        });
+                responseListener, new ErrorResponseListener());
         // Add the request to the RequestQueue.
         RequestManager.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
@@ -101,10 +101,45 @@ public class MovieDetailsActivity extends AppCompatActivity {
         //TODO do something with VideoResponse
     }
 
-    private void requestReviews()
-    {
+    private void requestReviews(int id) {
+        requestAction(id, "reviews", new ReviewResponseListener());
         // http://api.themoviedb.org/3/movie/{id}/reviews?api_key=[YOUR API KEY]
         //// TODO: 11/10/2015 implement me!
     }
 
+    private static class ErrorResponseListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.e("response", "ErrorResponse");
+        }
+    }
+
+
+    private class VideoResponseListener implements Response.Listener<String> {
+        @Override
+        public void onResponse(String response) {
+            Log.v("response", "Response is: " + response);
+
+            parseVideoResponse(response);
+        }
+    }
+
+    private class ReviewResponseListener implements Response.Listener<String> {
+        @Override
+        public void onResponse(String response) {
+            Log.v("response", "Response is: " + response);
+
+            parseReviewResponse(response);
+        }
+    }
+
+    private void parseReviewResponse(String response) {
+        // /referenced http://stackoverflow.com/questions/8650913/gson-deserializer-for-java-util-date
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd")
+                .create();
+        Type reviewListType = new TypeToken<ReviewResponse>(){}.getType();
+        ReviewResponse reviewResponse = gson.fromJson(response, reviewListType);
+        //TODO do something with ReviewResponse )
+    }
 }

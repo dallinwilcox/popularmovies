@@ -81,6 +81,10 @@ public class Movie implements Parcelable{
         }
     };
 
+    public int getId() {
+        return id;
+    }
+
     public String getPosterUrl()
     {
         Uri.Builder builder = new Uri.Builder();
