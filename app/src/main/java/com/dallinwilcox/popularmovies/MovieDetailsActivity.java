@@ -3,6 +3,8 @@ package com.dallinwilcox.popularmovies;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,7 +43,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView overviewText;
     @Bind(R.id.voteAverageText)
     TextView rating;
+    @Bind(R.id.videos)
+    RecyclerView videos;
+//    @Bind(R.id.reviews)
+//    RecyclerView reviews;
     //referenced http://jakewharton.github.io/butterknife/
+    private VideoListAdapter videoListAdapter;
+//    private ReviewListAdapter reviewListAdapter;
 
     public static final String MOVIE_EXTRA = "MovieExtra";
 
@@ -52,8 +60,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
         ButterKnife.bind(this);
         Movie movie = (Movie) getIntent().getExtras().getParcelable(MOVIE_EXTRA);
-        requestVideos(movie.getId());
-        requestReviews(movie.getId());
+        videoListAdapter = new VideoListAdapter(this, movie.getId());
+        videos.setLayoutManager(new LinearLayoutManager(this));
+        videos.setAdapter(videoListAdapter);
+
+        //requestReviews(movie.getId());
         titleText.setText(movie.getOriginal_title());
         Glide.with(this)
                 .load(movie.getPosterUrl())
@@ -66,63 +77,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
         rating.setText(String.format(getString(R.string.rating), movie.getVote_average()));
     }
 
-    private void requestVideos(int id) {
 
-        requestAction(id, "videos", new VideoResponseListener());
-    }
-
-    private void requestAction(int id, String action, Response.Listener<String> responseListener) {
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("http")
-                .authority("api.themoviedb.org")
-                .appendPath("3")
-                .appendPath("movie")
-                .appendPath(Integer.toString(id))
-                .appendPath(action)
-                .appendQueryParameter("api_key", getString(R.string.tmdb_api_key));
-        //videos url - http://api.themoviedb.org/3/movie/{id}/videos?api_key=[YOUR API KEY]
-        //review url - http://api.themoviedb.org/3/movie/{id}/reviews?api_key=[YOUR API KEY]
-        String url = builder.build().toString();
-        Log.v("request", url);
-        // Request a string response from the provided URL
-        StringRequest request = new StringRequest(Request.Method.GET, url,
-                responseListener, new ErrorResponseListener());
-        // Add the request to the RequestQueue.
-        RequestManager.getInstance(getApplicationContext()).addToRequestQueue(request);
-    }
-
-    private void parseVideoResponse(String response) {
-        //referenced http://stackoverflow.com/questions/8650913/gson-deserializer-for-java-util-date
-        Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd")
-                .create();
-        Type videoListType = new TypeToken<VideoResponse>(){}.getType();
-        VideoResponse videoResponse = gson.fromJson(response, videoListType);
-        //TODO do something with VideoResponse
-    }
-
-    private void requestReviews(int id) {
-        requestAction(id, "reviews", new ReviewResponseListener());
-        // http://api.themoviedb.org/3/movie/{id}/reviews?api_key=[YOUR API KEY]
-        //// TODO: 11/10/2015 implement me!
-    }
-
-    private static class ErrorResponseListener implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.e("response", "ErrorResponse");
-        }
-    }
+//    private void requestReviews(int id) {
+//        requestAction(id, "reviews", new ReviewResponseListener());
+//        // http://api.themoviedb.org/3/movie/{id}/reviews?api_key=[YOUR API KEY]
+//        //// TODO: 11/10/2015 implement me!
+//    }
 
 
-    private class VideoResponseListener implements Response.Listener<String> {
-        @Override
-        public void onResponse(String response) {
-            Log.v("response", "Response is: " + response);
-
-            parseVideoResponse(response);
-        }
-    }
 
     private class ReviewResponseListener implements Response.Listener<String> {
         @Override

@@ -14,4 +14,8 @@ public class ReviewResponse {
     public ArrayList<Review> getResults() {
         return results;
     }
+    public int getResultSize()
+    {
+        return results.size();
+    }
 }

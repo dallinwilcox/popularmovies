@@ -17,7 +17,7 @@ public class RequestManager {
 
 
     private RequestManager(Context context) {
-        //only store a reference to applicationContext
+        //only keep a reference to applicationContext
         this.context = context.getApplicationContext();
         requestQueue = getRequestQueue();
     }

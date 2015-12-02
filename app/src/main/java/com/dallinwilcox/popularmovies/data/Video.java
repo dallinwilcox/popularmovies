@@ -1,6 +1,6 @@
 package com.dallinwilcox.popularmovies.data;
 
-import java.net.URL;
+import android.net.Uri;
 
 /**
  * Created by dcwilcox on 11/9/2015.
@@ -13,5 +13,21 @@ public class Video {
     String site;
     String size;
     String type;
-    URL url;
+
+    public String getThumbnailUrl ()
+    {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http")
+                .authority("img.youtube.com")
+                .appendPath("vi")
+                .appendPath(key)
+                .appendPath("mqdefault.jpg");
+        // url looks like http://img.youtube.com/vi/dXo0LextZTU/mqdefault.jpg
+
+        return builder.build().toString();
+    }
+
+    public String getName() {
+        return name;
+    }
 }

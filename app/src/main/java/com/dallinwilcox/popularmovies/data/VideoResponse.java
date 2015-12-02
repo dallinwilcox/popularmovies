@@ -11,4 +11,9 @@ public class VideoResponse {
     public ArrayList<Video> getResults() {
         return results;
     }
+    //if only Android supported Java 8 default methods in an interface...
+    public int getResultSize()
+    {
+        return results.size();
+    }
 }
