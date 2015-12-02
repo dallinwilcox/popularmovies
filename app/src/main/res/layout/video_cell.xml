@@ -5,7 +5,9 @@
         android:layout_width="@dimen/thumb_width"
         android:layout_height="@dimen/thumb_height"
         />
-    <textView android:id="@+id/video_name_text_view"
+    <TextView android:id="@+id/video_name_text_view"
         android:layout_toRightOf="@id/video_thumb_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         />
 </RelativeLayout>
