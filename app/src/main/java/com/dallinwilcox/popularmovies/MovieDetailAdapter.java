@@ -34,7 +34,7 @@ import java.util.ArrayList;
  * https://guides.codepath.com/android/Heterogenous-Layouts-inside-RecyclerView</a>
  */
 public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    // TODO: 12/3/2015 Need to decide on number of lists (1 or 2 + single movie object?)
+// TODO: 12/3/2015 Need to decide on number of lists (1 or 2 + single movie object?)
     private ArrayList<Object> adapterItems;
     private ArrayList<Video> adapterVideoList;
     // Instantiate the RequestQueue.
@@ -68,8 +68,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-            {
+        // TODO: 12/3/2015 implement this correctly based on type 
                 VideoViewHolder videoView = (VideoViewHolder) holder;
                 Video videoAtPosition = adapterVideoList.get(position);
                 Glide.with(videoView.videoThumbImageView.getContext())
@@ -77,8 +76,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         .centerCrop()
                         .into(videoView.videoThumbImageView);
                 videoView.videoName.setText(videoAtPosition.getName());
-            }
-        }
+
     }
 
     @Override
