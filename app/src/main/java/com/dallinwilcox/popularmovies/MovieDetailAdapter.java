@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.bumptech.glide.Glide;
+import com.dallinwilcox.popularmovies.data.Movie;
+import com.dallinwilcox.popularmovies.data.Review;
 import com.dallinwilcox.popularmovies.data.Video;
 import com.dallinwilcox.popularmovies.data.VideoResponse;
 import com.dallinwilcox.popularmovies.inf.RequestManager;
@@ -28,42 +30,79 @@ import java.util.ArrayList;
  * <p/>
  * //referenced <a href="http://www.vogella.com/tutorials/AndroidRecyclerView/article.html#recyclerview_overview">
  * http://www.vogella.com/tutorials/AndroidRecyclerView/article.html#recyclerview_overview</a>
+ * <a href="https://guides.codepath.com/android/Heterogenous-Layouts-inside-RecyclerView">
+ * https://guides.codepath.com/android/Heterogenous-Layouts-inside-RecyclerView</a>
  */
-public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.VideoListViewHolder> {
+public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    // TODO: 12/3/2015 Need to decide on number of lists (1 or 2 + single movie object?)
+    private ArrayList<Object> adapterItems;
     private ArrayList<Video> adapterVideoList;
     // Instantiate the RequestQueue.
     private RequestQueue queue;
     private String apiKey = "";
     private int movieId;
     private OnItemClick itemClick;
+    private static final int VIEW_TYPE_OVERVIEW = 0;
+    private static final int VIEW_TYPE_VIDEO = 1;
+    private static final int VIEW_TYPE_REVIEW = 2;
 
     @Override
-    public VideoListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View cell = LayoutInflater.from(parent.getContext()).inflate(R.layout.video_cell, parent, false);
-        return new VideoListViewHolder(cell);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case VIEW_TYPE_OVERVIEW:
+                View overview = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.overview_cell, parent, false);
+                return new OverviewViewHolder(overview);
+            case VIEW_TYPE_VIDEO:
+                View video = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.video_cell, parent, false);
+                return new VideoViewHolder(video);
+            case VIEW_TYPE_REVIEW:
+            default:
+                View review = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.review_cell, parent, false);
+                return new ReviewViewHolder(review);
+        }
     }
+
 
     @Override
-    public void onBindViewHolder(VideoListViewHolder holder, int position) {
-        Video videoAtPosition = adapterVideoList.get(position);
-        Glide.with(holder.videoThumbImageView.getContext())
-                .load(videoAtPosition.getThumbnailUrl())
-                .centerCrop()
-                .into(holder.videoThumbImageView);
-        holder.videoName.setText(videoAtPosition.getName());
-    }
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
+            {
+                VideoViewHolder videoView = (VideoViewHolder) holder;
+                Video videoAtPosition = adapterVideoList.get(position);
+                Glide.with(videoView.videoThumbImageView.getContext())
+                        .load(videoAtPosition.getThumbnailUrl())
+                        .centerCrop()
+                        .into(videoView.videoThumbImageView);
+                videoView.videoName.setText(videoAtPosition.getName());
+            }
+        }
+    }
 
     @Override
     public int getItemCount() {
         return adapterVideoList.size();
     }
 
-    public class VideoListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    @Override
+    public int getItemViewType(int position) {
+        if (adapterItems.get(position) instanceof Movie)
+        {
+            return VIEW_TYPE_OVERVIEW;
+        } else if (adapterItems.get(position) instanceof Video) {
+            return VIEW_TYPE_VIDEO;
+        } else if (adapterItems.get(position) instanceof Review){
+            return VIEW_TYPE_REVIEW;
+        }
+        return -1;
+    }
+    public class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView videoThumbImageView;
         public TextView videoName;
 
-        public VideoListViewHolder(View itemView) {
+        public VideoViewHolder(View itemView) {
             super(itemView);
             itemView.setClickable(true);
             itemView.setOnClickListener(this);
@@ -104,8 +143,9 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
         return adapterVideoList.get(position);
     }
 
-    public VideoListAdapter(Context context, int movieId) {
+    public MovieDetailAdapter(Context context, int movieId) {
         adapterVideoList = new ArrayList<Video>();
+        adapterItems = new ArrayList<>();
         queue = RequestManager.getInstance(context).getRequestQueue();
         apiKey = context.getString(R.string.tmdb_api_key);
         this.movieId = movieId;

@@ -1,6 +1,5 @@
 package com.dallinwilcox.popularmovies;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,17 +8,11 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.dallinwilcox.popularmovies.data.Movie;
 
 import com.dallinwilcox.popularmovies.data.ReviewResponse;
-import com.dallinwilcox.popularmovies.data.Video;
-import com.dallinwilcox.popularmovies.data.VideoResponse;
-import com.dallinwilcox.popularmovies.inf.RequestManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -43,12 +36,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView overviewText;
     @Bind(R.id.voteAverageText)
     TextView rating;
-    @Bind(R.id.videos)
+    @Bind(R.id.detail_recycler)
     RecyclerView videos;
 //    @Bind(R.id.reviews)
 //    RecyclerView reviews;
     //referenced http://jakewharton.github.io/butterknife/
-    private VideoListAdapter videoListAdapter;
+    private MovieDetailAdapter movieDetailAdapter;
 //    private ReviewListAdapter reviewListAdapter;
 
     public static final String MOVIE_EXTRA = "MovieExtra";
@@ -60,9 +53,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
         ButterKnife.bind(this);
         Movie movie = (Movie) getIntent().getExtras().getParcelable(MOVIE_EXTRA);
-        videoListAdapter = new VideoListAdapter(this, movie.getId());
+        movieDetailAdapter = new MovieDetailAdapter(this, movie.getId());
         videos.setLayoutManager(new LinearLayoutManager(this));
-        videos.setAdapter(videoListAdapter);
+        videos.setAdapter(movieDetailAdapter);
 
         //requestReviews(movie.getId());
         titleText.setText(movie.getOriginal_title());
