@@ -1,4 +1,4 @@
-package com.dallinwilcox.popularmovies;
+package com.dallinwilcox.popularmovies.movie_detail;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,16 +6,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.bumptech.glide.Glide;
+import com.dallinwilcox.popularmovies.R;
 import com.dallinwilcox.popularmovies.data.Movie;
 import com.dallinwilcox.popularmovies.data.Review;
 import com.dallinwilcox.popularmovies.data.Video;
 import com.dallinwilcox.popularmovies.data.VideoResponse;
+import com.dallinwilcox.popularmovies.inf.OnItemClick;
 import com.dallinwilcox.popularmovies.inf.RequestManager;
 import com.dallinwilcox.popularmovies.inf.RequestUtils;
 import com.google.gson.Gson;
@@ -40,23 +40,23 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     // Instantiate the RequestQueue.
     private RequestQueue queue;
     private String apiKey = "";
-    private int movieId;
+    private Movie movie;
     private OnItemClick itemClick;
-    private static final int VIEW_TYPE_OVERVIEW = 0;
+    private static final int VIEW_TYPE_MOVIE = 0;
     private static final int VIEW_TYPE_VIDEO = 1;
     private static final int VIEW_TYPE_REVIEW = 2;
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
-            case VIEW_TYPE_OVERVIEW:
+            case VIEW_TYPE_MOVIE:
                 View overview = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.overview_cell, parent, false);
-                return new OverviewViewHolder(overview);
+                return new MovieOverviewViewHolder(overview);
             case VIEW_TYPE_VIDEO:
                 View video = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.video_cell, parent, false);
-                return new VideoViewHolder(video);
+                return new VideoViewHolder(this, video);
             case VIEW_TYPE_REVIEW:
             default:
                 View review = LayoutInflater.from(parent.getContext())
@@ -68,7 +68,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        // TODO: 12/3/2015 implement this correctly based on type 
+        // TODO: 12/3/2015 implement this correctly based on type
                 VideoViewHolder videoView = (VideoViewHolder) holder;
                 Video videoAtPosition = adapterVideoList.get(position);
                 Glide.with(videoView.videoThumbImageView.getContext())
@@ -86,36 +86,15 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemViewType(int position) {
-        if (adapterItems.get(position) instanceof Movie)
+        if (position == 0)
         {
-            return VIEW_TYPE_OVERVIEW;
+            return VIEW_TYPE_MOVIE;
         } else if (adapterItems.get(position) instanceof Video) {
             return VIEW_TYPE_VIDEO;
         } else if (adapterItems.get(position) instanceof Review){
             return VIEW_TYPE_REVIEW;
         }
         return -1;
-    }
-    public class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public ImageView videoThumbImageView;
-        public TextView videoName;
-
-        public VideoViewHolder(View itemView) {
-            super(itemView);
-            itemView.setClickable(true);
-            itemView.setOnClickListener(this);
-            videoThumbImageView = (ImageView) itemView.findViewById(R.id.video_thumb_image_view);
-            videoName =(TextView) itemView.findViewById(R.id.video_name_text_view);
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (itemClick != null) {
-                itemClick.onItemClicked(getAdapterPosition());
-                //http://stackoverflow.com/questions/32323548/passing-data-from-on-click-function-of-my-recycler-adaptor
-                //http://stackoverflow.com/a/27886776
-            }
-        }
     }
 
     public OnItemClick getItemClick() {
@@ -141,12 +120,12 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return adapterVideoList.get(position);
     }
 
-    public MovieDetailAdapter(Context context, int movieId) {
+    public MovieDetailAdapter(Context context, Movie movie) {
         adapterVideoList = new ArrayList<Video>();
         adapterItems = new ArrayList<>();
         queue = RequestManager.getInstance(context).getRequestQueue();
         apiKey = context.getString(R.string.tmdb_api_key);
-        this.movieId = movieId;
+        this.movie = movie;
 
         if (adapterVideoList.size() == 0) {
             requestVideos();
@@ -156,7 +135,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private void requestVideos() {
         // Add the request to the RequestQueue.
         queue.add(
-                RequestUtils.buildMovieDetailRequest(movieId, "videos", apiKey, new VideoResponseListener()));
+                RequestUtils.buildMovieDetailRequest(movie.getId(), "videos", apiKey, new VideoResponseListener()));
     }
 
     private class VideoResponseListener implements Response.Listener<String> {

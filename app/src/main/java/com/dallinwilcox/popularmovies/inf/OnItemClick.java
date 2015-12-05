@@ -1,4 +1,4 @@
-package com.dallinwilcox.popularmovies;
+package com.dallinwilcox.popularmovies.inf;
 
 /**
  * Created by dcwilcox on 10/24/2015.

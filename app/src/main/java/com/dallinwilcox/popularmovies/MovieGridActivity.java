@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.dallinwilcox.popularmovies.inf.OnItemClick;
+import com.dallinwilcox.popularmovies.movie_detail.MovieDetailsActivity;
+import com.dallinwilcox.popularmovies.settings.SettingsActivity;
 
 public class MovieGridActivity extends AppCompatActivity implements OnItemClick {
     private RecyclerView movieGrid;

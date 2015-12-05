@@ -1,4 +1,4 @@
-package com.dallinwilcox.popularmovies;
+package com.dallinwilcox.popularmovies.settings;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

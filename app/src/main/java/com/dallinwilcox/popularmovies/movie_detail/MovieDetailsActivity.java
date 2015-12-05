@@ -1,4 +1,4 @@
-package com.dallinwilcox.popularmovies;
+package com.dallinwilcox.popularmovies.movie_detail;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.bumptech.glide.Glide;
+import com.dallinwilcox.popularmovies.R;
 import com.dallinwilcox.popularmovies.data.Movie;
 
 import com.dallinwilcox.popularmovies.data.ReviewResponse;
@@ -53,7 +54,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
         ButterKnife.bind(this);
         Movie movie = (Movie) getIntent().getExtras().getParcelable(MOVIE_EXTRA);
-        movieDetailAdapter = new MovieDetailAdapter(this, movie.getId());
+        movieDetailAdapter = new MovieDetailAdapter(this, movie);
         videos.setLayoutManager(new LinearLayoutManager(this));
         videos.setAdapter(movieDetailAdapter);
 

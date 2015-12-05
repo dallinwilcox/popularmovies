@@ -1,10 +1,12 @@
-package com.dallinwilcox.popularmovies;
+package com.dallinwilcox.popularmovies.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+
+import com.dallinwilcox.popularmovies.R;
 
 import java.util.Map;
 
