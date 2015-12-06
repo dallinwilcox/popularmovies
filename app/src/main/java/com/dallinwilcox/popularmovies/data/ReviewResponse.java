@@ -6,11 +6,11 @@ import java.util.ArrayList;
  * Created by dcwilcox on 11/9/2015.
  */
 public class ReviewResponse {
-    int id;
-    int page;
-    ArrayList<Review> results;
-    int total_pages;
-    int total_results;
+    private int id;
+    private int page;
+    private ArrayList<Review> results;
+    private int total_pages;
+    private int total_results;
     public ArrayList<Review> getResults() {
         return results;
     }

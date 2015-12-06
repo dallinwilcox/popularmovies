@@ -6,13 +6,14 @@ import android.net.Uri;
  * Created by dcwilcox on 11/9/2015.
  */
 public class Video {
-    String id;
-    String iso_639_1;
-    String key;
-    String name;
-    String site;
-    String size;
-    String type;
+    public static final String YOU_TUBE = "YouTube";
+    private String id;
+    private String iso_639_1;
+    private String key;
+    private String name;
+    private String site;
+    private String size;
+    private String type;
 
     public String getThumbnailUrl ()
     {
@@ -29,5 +30,17 @@ public class Video {
 
     public String getName() {
         return name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getSite() {
+        return site;
     }
 }

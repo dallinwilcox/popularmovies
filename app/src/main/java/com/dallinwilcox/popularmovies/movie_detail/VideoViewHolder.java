@@ -1,5 +1,8 @@
 package com.dallinwilcox.popularmovies.movie_detail;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,7 +25,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnC
         super(videoView);
         this.movieDetailAdapter = movieDetailAdapter;
         videoView.setClickable(true);
-        videoView.setOnClickListener(movieDetailAdapter);
+        videoView.setOnClickListener(this);
         videoThumbImageView = (ImageView) videoView.findViewById(R.id.video_thumb_image_view);
         videoName = (TextView) videoView.findViewById(R.id.video_name_text_view);
     }
@@ -38,10 +41,20 @@ public class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
     @Override
     public void onClick(View v) {
-        if (movieDetailAdapter.getItemClick() != null) {
-            movieDetailAdapter.getItemClick().onItemClicked(getAdapterPosition());
-            //http://stackoverflow.com/questions/32323548/passing-data-from-on-click-function-of-my-recycler-adaptor
-            //http://stackoverflow.com/a/27886776
+        if (null == movieDetailAdapter) {
+            return;
         }
+        Video video = (Video) movieDetailAdapter.get(getAdapterPosition() - 1);
+        if (!Video.YOU_TUBE.equalsIgnoreCase(video.getSite())){
+            return;
+        }
+        try{
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + video.getKey()));
+                v.getContext().startActivity(intent);
+            }catch (ActivityNotFoundException ex) {
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://www.youtube.com/watch?v="+video.getKey()));
+                v.getContext().startActivity(intent);
+            }
     }
 }

@@ -14,19 +14,19 @@ import java.util.Date;
 public class Movie implements Parcelable{
     boolean adult;
     //field names match API JSON object field names for Gson parsing so using _ instead of camelcase
-    URI backdrop_path;
-    int[] genre_ids;
-    int id;  //if id ever exceeds max int, may need to switch to a long
-    String original_language;
-    String original_title;
-    String overview;
-    Date release_date;
-    URI poster_path;
-    float popularity;
-    String title;
-    boolean video;
-    float vote_average;
-    float vote_count;
+    private URI backdrop_path;
+    private int[] genre_ids;
+    private int id;  //if id ever exceeds max int, may need to switch to a long
+    private String original_language;
+    private String original_title;
+    private String overview;
+    private Date release_date;
+    private URI poster_path;
+    private float popularity;
+    private String title;
+    private boolean video;
+    private float vote_average;
+    private float vote_count;
 
     protected Movie(Parcel in) {
         adult = in.readByte() != 0;

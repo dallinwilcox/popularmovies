@@ -120,16 +120,17 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         queue = RequestManager.getInstance(context).getRequestQueue();
         apiKey = context.getString(R.string.tmdb_api_key);
         this.movie = movie;
+        notifyItemInserted(0);
         requestVideos();
         requestReviews();
     }
 
     private void requestVideos() {
-        queue.add( RequestUtils.buildMovieDetailRequest(
-                    movie.getId(),
-                    "videos",
-                    apiKey,
-                    new VideoResponseListener()));
+        queue.add(RequestUtils.buildMovieDetailRequest(
+                movie.getId(),
+                "videos",
+                apiKey,
+                new VideoResponseListener()));
     }
 
     private void requestReviews() {
@@ -143,6 +144,10 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onClick(View v) {
 
+    }
+
+    public Object get(int position) {
+        return adapterItems.get(position);
     }
 
     private class VideoResponseListener implements Response.Listener<String> {
@@ -161,9 +166,11 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 .create();
         Type videoListType = new TypeToken<VideoResponse>(){}.getType();
         VideoResponse videoResponse = gson.fromJson(response, videoListType);
-        //always insert videos at the front so they render first after the overview.
-        adapterItems.addAll(0, videoResponse.getResults());
-        notifyItemRangeInserted(0, videoResponse.getResultSize());
+        if (0 != videoResponse.getResultSize()) {
+            //always insert videos at the front so they render first after the overview.
+            adapterItems.addAll(0, videoResponse.getResults());
+            notifyItemRangeInserted(1, (videoResponse.getResultSize() - 1));
+        }
     }
 
     private class ReviewResponseListener implements Response.Listener<String> {
@@ -181,8 +188,10 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 .create();
         Type reviewListType = new TypeToken<ReviewResponse>(){}.getType();
         ReviewResponse reviewResponse = gson.fromJson(response, reviewListType);
-        //always insert reviews at the back so they render last after the overview and videos.
-        adapterItems.addAll(reviewResponse.getResults());
-        notifyItemRangeInserted(0, reviewResponse.getResultSize());
+        if (0 != reviewResponse.getResultSize()) {
+            //always insert reviews at the back so they render last after the overview and videos.
+            adapterItems.addAll(reviewResponse.getResults());
+            notifyItemRangeInserted(adapterItems.size() - (reviewResponse.getResultSize() - 1), adapterItems.size());
+        }
     }
 }
