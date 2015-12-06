@@ -48,12 +48,13 @@ public class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnC
         if (!Video.YOU_TUBE.equalsIgnoreCase(video.getSite())){
             return;
         }
+//        referenced http://stackoverflow.com/a/12439378/2169923?
         try{
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + video.getKey()));
                 v.getContext().startActivity(intent);
             }catch (ActivityNotFoundException ex) {
                 Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://www.youtube.com/watch?v="+video.getKey()));
+                        Uri.parse("http://www.youtube.com/watch?v=" + video.getKey()));
                 v.getContext().startActivity(intent);
             }
     }
