@@ -16,7 +16,6 @@ import butterknife.ButterKnife;
  * Created by dcwilcox on 12/4/2015.
  */
 public class MovieOverviewViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    @Bind(R.id.titleText) TextView titleText;
     @Bind(R.id.posterImageView) ImageView posterImage;
     @Bind(R.id.releaseDateText) TextView releaseDate;
     @Bind(R.id.overviewText) TextView overviewText;
@@ -35,7 +34,6 @@ public class MovieOverviewViewHolder extends RecyclerView.ViewHolder implements 
 
     public void bind(int position, Movie movie) {
         Context context = posterImage.getContext();
-        titleText.setText(movie.getOriginal_title());
         Glide.with(context)
                 .load(movie.getPosterUrl())
                 .centerCrop()

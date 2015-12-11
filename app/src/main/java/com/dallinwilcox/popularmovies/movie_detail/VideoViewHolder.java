@@ -12,22 +12,24 @@ import com.bumptech.glide.Glide;
 import com.dallinwilcox.popularmovies.R;
 import com.dallinwilcox.popularmovies.data.Video;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by dcwilcox on 12/4/2015.
  */
 public class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
     private MovieDetailAdapter movieDetailAdapter;
-    private ImageView videoThumbImageView;
-    private TextView videoName;
+    @Bind(R.id.video_thumb_image_view) ImageView videoThumbImageView;
+    @Bind(R.id.video_name_text_view) TextView videoName;
 
 
     public VideoViewHolder(MovieDetailAdapter movieDetailAdapter, View videoView) {
         super(videoView);
+        ButterKnife.bind(this, videoView);
         this.movieDetailAdapter = movieDetailAdapter;
         videoView.setClickable(true);
         videoView.setOnClickListener(this);
-        videoThumbImageView = (ImageView) videoView.findViewById(R.id.video_thumb_image_view);
-        videoName = (TextView) videoView.findViewById(R.id.video_name_text_view);
     }
 
     public void bind(int position, Video video) {

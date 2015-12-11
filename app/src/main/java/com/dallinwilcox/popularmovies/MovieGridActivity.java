@@ -9,18 +9,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.dallinwilcox.popularmovies.inf.OnItemClick;
+import com.dallinwilcox.popularmovies.movie_detail.MovieDetailFragment;
 import com.dallinwilcox.popularmovies.movie_detail.MovieDetailsActivity;
 import com.dallinwilcox.popularmovies.settings.SettingsActivity;
 
 public class MovieGridActivity extends AppCompatActivity implements OnItemClick {
     private RecyclerView movieGrid;
     private MovieGridAdapter movieGridAdapter;
+    private boolean isDualPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_movie_grid);
+
         movieGrid = (RecyclerView) findViewById(R.id.movieGrid);
         movieGridAdapter = new MovieGridAdapter(this);
         movieGrid.setAdapter(movieGridAdapter);
@@ -56,7 +58,7 @@ public class MovieGridActivity extends AppCompatActivity implements OnItemClick 
     @Override
     public void onItemClicked(int position) {
         Intent intent = new Intent(getApplicationContext() ,MovieDetailsActivity.class);
-        intent.putExtra(MovieDetailsActivity.MOVIE_EXTRA, movieGridAdapter.get(position));
+        intent.putExtra(MovieDetailFragment.MOVIE_EXTRA, movieGridAdapter.get(position));
         startActivity(intent);
     }
 
