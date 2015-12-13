@@ -2,9 +2,13 @@ package com.dallinwilcox.popularmovies;
 
 import android.content.Intent;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,8 +17,12 @@ import com.dallinwilcox.popularmovies.movie_detail.MovieDetailFragment;
 import com.dallinwilcox.popularmovies.movie_detail.MovieDetailsActivity;
 import com.dallinwilcox.popularmovies.settings.SettingsActivity;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class MovieGridActivity extends AppCompatActivity implements OnItemClick {
-    private RecyclerView movieGrid;
+
+    @Bind(R.id.movie_grid) RecyclerView movieGrid;
     private MovieGridAdapter movieGridAdapter;
     private boolean isDualPane;
 
@@ -22,11 +30,18 @@ public class MovieGridActivity extends AppCompatActivity implements OnItemClick 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_grid);
-
-        movieGrid = (RecyclerView) findViewById(R.id.movieGrid);
+        ButterKnife.bind(this);
         movieGridAdapter = new MovieGridAdapter(this);
         movieGrid.setAdapter(movieGridAdapter);
         movieGridAdapter.setItemClick(this);
+
+        if (findViewById(R.id.movie_detail_container) != null) {
+            // The detail container view will be present only in the
+            // large-screen layouts (res/values-w900dp).
+            // If this view is present, then the
+            // activity should be in two-pane mode.
+            isDualPane = true;
+        }
     }
 
     @Override
@@ -57,9 +72,25 @@ public class MovieGridActivity extends AppCompatActivity implements OnItemClick 
 
     @Override
     public void onItemClicked(int position) {
+
+        if (isDualPane) {
+            Bundle arguments = new Bundle();
+            arguments.putParcelable(MovieDetailFragment.MOVIE_EXTRA, movieGridAdapter.get(position));
+            MovieDetailFragment fragment = new MovieDetailFragment();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_container, fragment)
+                    .commit();
+//            DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+//            if(!drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+//                drawerLayout.openDrawer(Gravity.RIGHT);
+//            }
+        }
+        else {
         Intent intent = new Intent(getApplicationContext() ,MovieDetailsActivity.class);
         intent.putExtra(MovieDetailFragment.MOVIE_EXTRA, movieGridAdapter.get(position));
         startActivity(intent);
+        }
     }
 
     @Override

@@ -29,7 +29,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     //@Bind(R.id.detail_recycler)
     //RecyclerView movieDetails;
-@Bind(R.id.fab) FloatingActionButton fab;
+    @Bind(R.id.fab) FloatingActionButton fab;
     @Bind(R.id.detail_toolbar) Toolbar toolbar;
 
     @Override

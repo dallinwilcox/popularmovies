@@ -22,6 +22,7 @@ import com.dallinwilcox.popularmovies.data.MovieResponse;
 import com.dallinwilcox.popularmovies.inf.AutofitRecyclerView;
 import com.dallinwilcox.popularmovies.inf.OnItemClick;
 import com.dallinwilcox.popularmovies.inf.RequestManager;
+import com.dallinwilcox.popularmovies.inf.RequestUtils;
 import com.dallinwilcox.popularmovies.settings.SettingsFragment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -194,12 +195,8 @@ public class MovieGridAdapter extends AutofitRecyclerView.Adapter<MovieGridAdapt
 
                         parseResponse(response);
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("response","ErrorResponse");
-            }
-        });
+                }, new RequestUtils.DefaultErrorResponseListener()
+        );
         // Add the request to the RequestQueue.
         queue.add(request);
     }
