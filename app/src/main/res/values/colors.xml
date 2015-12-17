@@ -2,4 +2,6 @@
 <resources>
     <color name="primary">#3F51B5</color>
     <color name="accent">#3fb5a3</color>
+    <color name="favorite_unselected">#ff4081</color>
+    <color name="favorite_selected">#ff4081</color>
 </resources>

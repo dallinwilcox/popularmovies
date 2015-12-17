@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+<android.support.v7.widget.RecyclerView
     android:id="@+id/detail_recycler"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.dallinwilcox.popularmovies.movie_detail.MovieDetailFragment"
-    android:background="@android:color/white"/>
+    tools:context="com.dallinwilcox.popularmovies.movie_detail.MovieDetailFragment" />
+
+<!--referenced http://stackoverflow.com/a/32731871/2169923-->
+<android.support.design.widget.FloatingActionButton
+android:id="@+id/fab"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_gravity="center_vertical|start"
+android:layout_margin="@dimen/fab_margin"
+android:src="@drawable/ic_favorite"
+android:tint="@android:color/white"
+app:layout_anchor="@+id/rootLayout"
+app:layout_anchorGravity="top|end"
+app:backgroundTint="@color/favorite_unselected"/>
+
+</android.support.design.widget.CoordinatorLayout>
