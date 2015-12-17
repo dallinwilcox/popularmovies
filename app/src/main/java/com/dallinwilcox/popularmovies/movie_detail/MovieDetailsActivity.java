@@ -27,9 +27,6 @@ import butterknife.ButterKnife;
 public class MovieDetailsActivity extends AppCompatActivity {
     //referenced http://jakewharton.github.io/butterknife/
 
-    //@Bind(R.id.detail_recycler)
-    //RecyclerView movieDetails;
-//    @Bind(R.id.fab) FloatingActionButton fab;
     @Bind(R.id.detail_toolbar) Toolbar toolbar;
 
     @Override
@@ -39,14 +36,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

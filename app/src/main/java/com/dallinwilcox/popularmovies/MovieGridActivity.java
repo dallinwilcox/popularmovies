@@ -2,13 +2,9 @@ package com.dallinwilcox.popularmovies;
 
 import android.content.Intent;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -81,10 +77,6 @@ public class MovieGridActivity extends AppCompatActivity implements OnItemClick 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.movie_detail_container, fragment)
                     .commit();
-//            DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//            if(!drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-//                drawerLayout.openDrawer(Gravity.RIGHT);
-//            }
         }
         else {
         Intent intent = new Intent(getApplicationContext() ,MovieDetailsActivity.class);

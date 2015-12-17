@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +34,8 @@ public class MovieDetailFragment extends Fragment {
     private MovieDetailAdapter movieDetailAdapter;
     @Bind(R.id.detail_recycler)
     RecyclerView movieDetails;
+    @Bind(R.id.fab)
+    FloatingActionButton fab;
 
     /**
      * Required empty constructor
@@ -40,32 +44,29 @@ public class MovieDetailFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (getArguments().containsKey(MOVIE_EXTRA)) {
-            movie = (Movie) getArguments().getParcelable(MovieDetailFragment.MOVIE_EXTRA);
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(movie.getTitle());
-            }
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_detail, container, false);
-        Context context = getActivity();
+        Activity activity = getActivity();
         if (getArguments().containsKey(MOVIE_EXTRA)) {
             movie = (Movie) getArguments().getParcelable(MovieDetailFragment.MOVIE_EXTRA);
         }
-        ButterKnife.bind(this, view);
-        movieDetailAdapter = new MovieDetailAdapter(context, movie);
-        movieDetails.setLayoutManager(new LinearLayoutManager(context));
-        movieDetails.setAdapter(movieDetailAdapter);
+        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+        if (appBarLayout != null) {
+            appBarLayout.setTitle(movie.getTitle());
+        }
 
+        ButterKnife.bind(this, view);
+        movieDetailAdapter = new MovieDetailAdapter(activity, movie);
+        movieDetails.setLayoutManager(new LinearLayoutManager(activity));
+        movieDetails.setAdapter(movieDetailAdapter);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
         return view;
     }
 
