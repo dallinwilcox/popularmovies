@@ -30,8 +30,13 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.dallinwilcox.popularmovies.MovieGridActivity" />
-    </activity>
+        </activity>
         <activity android:name=".settings.SettingsActivity" />
+        <!-- Providers -->
+        <provider
+            android:authorities="com.dallinwilcox.popularmovies_provider.authority"
+            android:name="com.dallinwilcox.popularmovies.data.FavoriteProviderConfig"
+            android:exported="false"/>
     </application>
 
 </manifest>

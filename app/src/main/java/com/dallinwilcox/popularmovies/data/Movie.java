@@ -8,6 +8,8 @@ import java.net.URI; //GSON speaks java.net URI so using that for parsing
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import ckm.simple.sql_provider.annotation.SimpleSQLTable;
+
 /**
  * Created by dcwilcox on 10/13/2015.
  */
@@ -27,6 +29,7 @@ public class Movie implements Parcelable{
     private boolean video;
     private float vote_average;
     private float vote_count;
+
 
     protected Movie(Parcel in) {
         adult = in.readByte() != 0;
