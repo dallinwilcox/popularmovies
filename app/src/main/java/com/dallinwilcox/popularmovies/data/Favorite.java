@@ -1,5 +1,6 @@
 package com.dallinwilcox.popularmovies.data;
 
+import com.dallinwilcox.popularmovies.inf.MovieApplication;
 import com.google.gson.Gson;
 
 import ckm.simple.sql_provider.annotation.SimpleSQLColumn;
@@ -12,13 +13,17 @@ import ckm.simple.sql_provider.annotation.SimpleSQLTable;
 //referenced https://github.com/ckurtm/simple-sql-provider
     //I'm too lazy to map all the fields for Movie, so I use gson to handle recreating the objects
     //and store the id separately for indexing and querying purposes without recreating every time.
-@SimpleSQLTable(table = "favorite", provider = FavoriteProviderConfig.FAVORITE_PROVIDER)
+@SimpleSQLTable(table = "favorite", provider = MovieApplication.FAVORITE_PROVIDER)
 public class Favorite {
     @SimpleSQLColumn("movie_id")
     public int movieId;
     //using JSON to stuff the whole object into the db.
     @SimpleSQLColumn("movie_json")
     public String movieJson;
+
+    public Favorite(){
+        super();
+    }
 
     public Favorite(Movie movie) {
         this.movieId = movie.getId();

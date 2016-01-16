@@ -1,5 +1,6 @@
 package com.dallinwilcox.popularmovies;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
+import com.dallinwilcox.popularmovies.data.FavoriteHelper;
 import com.dallinwilcox.popularmovies.data.Movie;
 import com.dallinwilcox.popularmovies.data.MovieResponse;
 import com.dallinwilcox.popularmovies.inf.AutofitRecyclerView;
@@ -46,6 +48,7 @@ public class MovieGridAdapter extends AutofitRecyclerView.Adapter<MovieGridAdapt
     private String apiKey = "";
     private String sortBy = "";
     private OnItemClick itemClick;
+    private ContentResolver contentResolver;
 
 
     @Override
@@ -157,6 +160,7 @@ public class MovieGridAdapter extends AutofitRecyclerView.Adapter<MovieGridAdapt
         adapterMovieList = new ArrayList<Movie>();
         queue = RequestManager.getInstance(context).getRequestQueue();
         apiKey = context.getString(R.string.tmdb_api_key);
+        contentResolver = context.getContentResolver();
         //don't have access to getDefaultSharedPreferences, so recreating instead of adding
         //an additional parameter since we can get it from context that is already passed in
         //see http://stackoverflow.com/a/6310080
@@ -171,6 +175,14 @@ public class MovieGridAdapter extends AutofitRecyclerView.Adapter<MovieGridAdapt
     }
     private void requestMovies(int page){
 
+        if (sortBy.startsWith("favorite"))
+        {
+            MovieResponse movieResponse = FavoriteHelper.getFavoriteMovies( contentResolver, 1);
+            adapterMovieList.addAll(movieResponse.getResults());
+            notifyItemRangeInserted((0), movieResponse.getResultSize());
+
+            return; //no need to make calls for favorites
+        }
         //reference http://stackoverflow.com/questions/19167954/use-uri-builder-in-android-or-create-url-with-variables
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http")

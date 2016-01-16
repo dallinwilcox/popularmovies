@@ -29,7 +29,7 @@ public class Movie implements Parcelable{
     private boolean video;
     private float vote_average;
     private float vote_count;
-
+    transient private boolean favorite = false;
 
     protected Movie(Parcel in) {
         adult = in.readByte() != 0;
@@ -47,6 +47,7 @@ public class Movie implements Parcelable{
         video = in.readByte() != 0;
         vote_average = in.readFloat();
         vote_count = in.readFloat();
+        favorite = in.readByte() != 0;
     }
 
     @Override
@@ -65,6 +66,7 @@ public class Movie implements Parcelable{
         dest.writeByte((byte) (video ? 1 : 0));
         dest.writeFloat(vote_average);
         dest.writeFloat(vote_count);
+        dest.writeByte((byte) (favorite ? 1 :0));
     }
 
     @Override

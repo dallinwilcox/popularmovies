@@ -21,4 +21,5 @@ public class MovieApplication extends Application{
         Log.d("MoviesApp", "onCreate");
         Log.d("MoviesApp", PreferenceManager.getDefaultSharedPreferences(this).getString("sort_preference_key", ""));
     }
+    public static final String FAVORITE_PROVIDER = "FavoriteProvider";
 }

@@ -58,7 +58,7 @@ public class MovieGridActivity extends AppCompatActivity implements OnItemClick 
         if (id == R.id.action_settings) {
             startActivity( new Intent (getApplicationContext(), SettingsActivity.class));
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                    .registerOnSharedPreferenceChangeListener(movieGridAdapter);
+            .registerOnSharedPreferenceChangeListener(movieGridAdapter);
             //registering listener here intentionally, refer to
             // http://stackoverflow.com/a/8668012/2169923
             return true;

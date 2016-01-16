@@ -3,10 +3,12 @@
     <string-array name="pref_sort_by_entries">
         <item name="mostPopular">Most Popular</item>
         <item name="highest-rated">Highest-rated</item>
+        <item name="favorite">Favorite</item>
     </string-array>
     <string-array name="pref_sort_by_values">
         <item name="mostPopular">@string/pref_sort_by_default_value</item>
         <item name="highest-rated">vote_average</item>
+        <item name="favorite">favorite</item>
     </string-array>
     <string-array name="pref_sort_order_entries">
         <item name="ascending">Descending</item>

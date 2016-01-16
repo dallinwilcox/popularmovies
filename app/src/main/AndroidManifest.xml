@@ -34,8 +34,8 @@
         <activity android:name=".settings.SettingsActivity" />
         <!-- Providers -->
         <provider
-            android:authorities="com.dallinwilcox.popularmovies_provider.authority"
-            android:name="com.dallinwilcox.popularmovies.data.FavoriteProviderConfig"
+            android:authorities="com.dallinwilcox.popularmovies.provider.authority"
+            android:name="com.dallinwilcox.popularmovies.data.FavoriteProvider"
             android:exported="false"/>
     </application>
 

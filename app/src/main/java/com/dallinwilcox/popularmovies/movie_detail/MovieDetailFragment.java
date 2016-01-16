@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.dallinwilcox.popularmovies.MovieGridActivity;
 
 import com.dallinwilcox.popularmovies.R;
+import com.dallinwilcox.popularmovies.data.FavoriteHelper;
 import com.dallinwilcox.popularmovies.data.Movie;
 
 import butterknife.Bind;
@@ -49,7 +50,7 @@ public class MovieDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         Activity activity = getActivity();
         if (getArguments().containsKey(MOVIE_EXTRA)) {
-            movie = (Movie) getArguments().getParcelable(MovieDetailFragment.MOVIE_EXTRA);
+            movie = getArguments().getParcelable(MovieDetailFragment.MOVIE_EXTRA);
         }
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
         if (appBarLayout != null) {
@@ -63,8 +64,9 @@ public class MovieDetailFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Saving movie as favorite", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                FavoriteHelper.saveFavorite(getContext().getContentResolver(), movie);
             }
         });
         return view;
